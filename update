@@ -1,0 +1,51 @@
+#!/bin/bash
+
+check_exit_status() {
+
+    if [ $? -eq 0 ]
+    then
+        echo
+        echo "Success"
+        echo
+    else
+        echo
+        echo "[ERROR] Process Failed!"
+        echo
+		
+        read -p "The last command exited with an error. Exit script? (yes/no) " answer
+
+        if [ "$answer" == "yes" ]
+        then
+            exit 1
+        fi
+    fi
+}
+
+update() {
+
+    sudo apt update --fix-missing;
+    check_exit_status
+
+    sudo apt full-upgrade -y;
+    check_exit_status
+
+    sudo apt install -f -y;
+    check_exit_status
+}
+
+clean() {
+
+    sudo apt autoremove -y;
+    check_exit_status
+
+    sudo apt autoclean -y;
+    check_exit_status
+
+    sudo updatedb;
+    check_exit_status
+}
+
+
+update;
+clean;
+exit;
